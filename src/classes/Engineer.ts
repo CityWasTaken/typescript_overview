@@ -1,7 +1,10 @@
-import Employee from "./Employee";
+import 'console.table'
+
+import Employee from "./Employee.js";
+import EngineerProps from '../interfaces/EngineerProps.js';
 
 
-class Engineer extends Employee {
+class Engineer extends Employee implements EngineerProps {
     programmingLanguages: String[];
 
     constructor(
@@ -15,6 +18,14 @@ class Engineer extends Employee {
         super(firstName, lastName, age, title, salary);
 
         this.programmingLanguages = programmingLanguages;
+    }
+
+    printProgrammingLanguages(): void {
+        console.table(this.programmingLanguages);
+    }
+
+    getProgrammingLanguages(): String[] {
+        return this.programmingLanguages
     }
 }
 

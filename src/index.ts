@@ -1,10 +1,9 @@
-import App from "./lib/App";
-import Analyst from "./lib/Analyst";
-import Engineer from "./lib/Engineer";
+import App from "./classes/App.js";
 
 
 
 
+App.seedEmployees();
 App.showMainMenu();
 
 

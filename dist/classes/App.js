@@ -10,6 +10,7 @@ class App {
         const mike = new Engineer('Mike', 'Smith', 27, 'developer', 30000, ['JS', 'Python', 'Java']);
         const adonis = new Analyst('Adonis', 'Smith', 27, 'vault specialist', 40000, ['BSAP', 'ODOP']);
         const magic = new Analyst('Magic', 'Smith', 27, 'vault specialist', 40000, ['BSAP', 'ODOP']);
+        city.updateSalary(28000);
         this.employees.push(city, mike, adonis, magic);
     }
     static async showMainMenu() {
@@ -24,7 +25,7 @@ class App {
             message: 'Please choose an option',
             name: 'menuChoices',
             type: 'list',
-            choices: ['Show Employees', 'Add Employee', 'Update Employee Salary', 'Exit']
+            choices: ['Show Employees', 'Add Employee', 'Update Employee Salary', 'Print Engineer Languages', 'Exit']
         });
         switch (menuChoiceObj.menuChoices) {
             case 'Show Employees':
@@ -37,6 +38,10 @@ class App {
                 break;
             case 'Update Employee Salary':
                 await this.showUpdateSalaryInterface();
+                this.showMainMenu();
+                break;
+            case 'Print Engineer Languages':
+                await this.printEngingeerLanguages();
                 this.showMainMenu();
                 break;
             default:
@@ -133,8 +138,52 @@ class App {
         this.employees.push(employeeObj);
         console.log('Eployee Successfully Added!');
     }
-    static showUpdateSalaryInterface() {
-        console.log('Show the update employee interface');
+    static async showUpdateSalaryInterface() {
+        const choices = this.employees.map((employeeObj) => {
+            return {
+                // The name property is what the user sees in the terminal as an option/choice
+                name: employeeObj.firstName + ' ' + employeeObj.lastName,
+                // The value is what we get back on the answersObj
+                value: employeeObj
+            };
+        });
+        const employeeAnswer = await inquirer.prompt([
+            {
+                message: 'Please select an employee from the list',
+                name: 'selectedEmployee',
+                type: 'list',
+                choices: choices
+            },
+            {
+                message: 'Please enter the new salary amount',
+                name: 'newSalary',
+                type: 'number',
+            },
+        ]);
+        employeeAnswer.selectedEmployee.updateSalary(employeeAnswer.newSalary);
+        console.log('Salary has been updated! Make that money!');
+    }
+    static async printEngingeerLanguages() {
+        const engineers = this.employees.filter((employeeObj) => {
+            if (employeeObj instanceof Engineer) {
+                return employeeObj;
+            }
+        });
+        const choices = engineers.map((employeeObj) => {
+            return {
+                // The name property is what the user sees in the terminal as an option/choice
+                name: employeeObj.firstName + ' ' + employeeObj.lastName,
+                // The value is what we get back on the answersObj
+                value: employeeObj
+            };
+        });
+        const engineerAnswer = await inquirer.prompt({
+            message: 'Please select an engineer from the list',
+            name: 'selectedEngineer',
+            type: 'list',
+            choices: choices
+        });
+        engineerAnswer.selectedEngineer.printProgrammingLanguages();
     }
 }
 export default App;
